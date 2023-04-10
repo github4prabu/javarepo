@@ -1,0 +1,10 @@
+/**
+ * 
+ */
+/**
+ * @author xpanantharaj
+ *
+ */
+module CoreJavaLeftOvers {
+	
+}
