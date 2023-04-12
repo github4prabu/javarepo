@@ -1,6 +1,7 @@
 package dedalus.controller;
 
 import java.io.*;
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -8,6 +9,8 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.function.BiPredicate;
 
+import dedalus.dao.EmployeeDao;
+import dedalus.dao.EmployeeDaoImplemention;
 import dedalus.modal.Employee;
 
 //POJO = Plain Old Java Object
@@ -15,21 +18,49 @@ public class EmployeeController implements EmployeeInterface {
 
 	Employee emp;
 	List<Employee> emplist = new ArrayList<Employee>();
-
+	EmployeeDao dao = new EmployeeDaoImplemention();
+	
 	public void addEmployee() {
 		Scanner sc1 = new Scanner(System.in);
 		emp = new Employee();
 
-		System.out.println("Enter Eid");
+		System.out.println("Enter Emp ID");
 		int eid = sc1.nextInt();
-		emp.setEid(eid);
+		emp.setEmpno(eid);
 
-		System.out.println("Enter Ename");
+		System.out.println("Enter Emp Name");
 		String ename = sc1.next();
 		emp.setEname(ename);
+				
+		System.out.println("Enter Job");
+		String job = sc1.next();
+		emp.setJob(job);
+		
+/*		System.out.println("Enter Manager ID");
+		float mgr = sc1.nextFloat();
+		emp.setMgr(mgr);
+		
+		System.out.println("Enter Hire Date");
+		String hiredate = sc1.next();
+		emp.setHiredate(hiredate);
+		
+		System.out.println("Enter Comm");
+		float comm = sc1.nextFloat();
+		emp.setComm(comm);
+
+		System.out.println("Enter Dept ID");
+		float depno = sc1.nextFloat();
+		emp.setDepno(depno);
+*/
+		// add to employee list
 		emplist.add(emp);
-		System.out.println("Employee Added Succesfully");
-		// sc1.close();
+		//System.out.println("Employee Added Succesfully");
+	    //sc1.close();
+		
+		// call db call to insert into emp table
+		dao.insertEmployee(emp);
+		System.out.println("Employee Inserted to DB Succesfully");
+		
 	}
 
 	public void viewEmployee() {
@@ -39,13 +70,47 @@ public class EmployeeController implements EmployeeInterface {
 		while (i.hasNext()) {
 			System.out.println(i.next());
 */
-		emplist.forEach(lis->System.out.println(lis));
+		// Using lamda
+		//emplist.forEach(lis->System.out.println(lis));
+		
+		dao.showEmployee();
+	}
+	
+	public void updateEmployee() {
+		Scanner sc2 = new Scanner(System.in);
+		emp = new Employee();
+
+		System.out.println("Enter Emp ID");
+		int eid = sc2.nextInt();
+		emp.setEmpno(eid);
+
+		System.out.println("Enter Emp Name");
+		String ename = sc2.next();
+		emp.setEname(ename);
+				
+		System.out.println("Enter Job");
+		String job = sc2.next();
+		emp.setJob(job);
+		
+		dao.updateEmployee(emp);
+	}
+
+	public void deleteEmployee() {
+		Scanner sc3 = new Scanner(System.in);
+		emp = new Employee();
+
+		System.out.println("Enter Emp ID");
+		int eid = sc3.nextInt();
+		emp.setEmpno(eid);
+
+		dao.deleteEmployee(emp.getEmpno());
 	}
 
 	public void serializeEmployee() {
 		try {
-			Employee emp = new Employee(1012, "Pavithra");
-
+			//Employee emp = new Employee (1012, "Pavithra", "CLERK", 30, "12/01/2023", 4000, 300, 10);
+			Employee emp = new Employee ();
+			
 			FileOutputStream fos = new FileOutputStream("dedalus.txt");
 			ObjectOutputStream oos = new ObjectOutputStream(fos);
 
@@ -68,7 +133,7 @@ public class EmployeeController implements EmployeeInterface {
 
 			Employee emp = (Employee) ois.readObject();
 			System.out.println("DeSerilized from file dedalus.txt");
-			System.out.println(emp.getEid());
+			System.out.println(emp.getEmpno());
 			System.out.println(emp.getEname());
 			ois.close();
 			fis.close();
