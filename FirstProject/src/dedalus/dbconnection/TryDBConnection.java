@@ -11,7 +11,7 @@ public class TryDBConnection {
 
 	try {
 		Class.forName("oracle.jdbc.driver.OracleDriver");
-		con = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521/xe", "sys as sysdba", "abc123");
+		con = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521/xe", "sys as sysdba", "");
 	}
 	catch (SQLException sqlex) {
 		sqlex.printStackTrace();
